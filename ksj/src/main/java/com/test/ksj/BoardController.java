@@ -3,7 +3,7 @@ package com.test.ksj;
 import java.util.List;
 
 import javax.inject.Inject;
-
+import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,10 +13,12 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.test.domain.BoardVO;
 import com.test.domain.Criteria;
+import com.test.domain.MemberVO;
 import com.test.domain.PageMaker;
 import com.test.domain.ReplyVO;
 import com.test.domain.SearchCriteria;
@@ -40,8 +42,14 @@ public class BoardController {
 	
 	//글작성 get
 	@RequestMapping(value = "/write", method = RequestMethod.GET)
-	public void getWrite() throws Exception{
+	public void getWrite(HttpSession session, Model model) throws Exception{
 		logger.info("get write");
+		
+		Object loginInfo =session.getAttribute("member");
+		
+		if(loginInfo == null) {
+			model.addAttribute("msg",false);
+		}
 	}
 	
 	//글작성 post
@@ -51,7 +59,7 @@ public class BoardController {
 		
 		service.write(vo);
 		
-		return "redirect:/";
+		return "redirect:/board/listSearch";
 	}
 	
 	//글 목록
@@ -72,11 +80,11 @@ public class BoardController {
 		
 		BoardVO vo=service.read(bno);
 		
-		model.addAttribute("read", vo);
-		model.addAttribute("scri", scri);
+		model.addAttribute("read", vo);	
 		
-		List<ReplyVO> repList = RepService.readReply(bno);
-		model.addAttribute("repList", repList);
+	/*	
+	 List<ReplyVO> repList = RepService.readReply(bno);
+		model.addAttribute("repList", repList); */
 
 	}
 	
@@ -108,15 +116,6 @@ public class BoardController {
 		return "redirect:/board/listSearch";
 	}
 	
-	//글 삭제
-	@RequestMapping(value="/delete", method=RequestMethod.GET)
-	public void getDelete(@RequestParam("bno") int bno, 
-			@ModelAttribute("scri") SearchCriteria scri,Model model)throws Exception{
-		logger.info("get delete");
-		
-		model.addAttribute("delete", bno);
-		model.addAttribute("scri",scri);
-	}
 	
 	//글 삭제 post
 	@RequestMapping(value="/delete",method=RequestMethod.POST)
@@ -168,68 +167,81 @@ public class BoardController {
 	
 	}	
 	
+	
+	// 댓글 목록
+	@ResponseBody
+	@RequestMapping(value = "/read/replyList", method = RequestMethod.GET)
+	public List<ReplyVO> replyList(@RequestParam("bno") int bno) throws Exception {
+	 logger.info("get readReply");
+	   
+	 List<ReplyVO> replyList = RepService.replyList(bno);
+	 
+	 
+	 return replyList ;
+	} 
+
+
+	
 	//댓글작성
-	@RequestMapping(value="/replyWrite", method=RequestMethod.POST)
-	public String replyWrite(ReplyVO vo, SearchCriteria scri, RedirectAttributes rttr)throws Exception{
-		logger.info("reply write");
-		
-		RepService.writeReply(vo);
-		
-		rttr.addAttribute("bno", vo.getBno());
-		rttr.addAttribute("page", scri.getPage());
-		rttr.addAttribute("perPageNum", scri.getPerPageNum());
-	    rttr.addAttribute("searchType", scri.getSearchType());
-		rttr.addAttribute("keyword", scri.getKeyword());
+	@ResponseBody
+	@RequestMapping(value="/read/registReply", method=RequestMethod.POST)
+	public void registReply(ReplyVO reply, HttpSession session)throws Exception{
+		logger.info("reply registReply");
 		
 		
-		return "redirect:/board/read";
+		MemberVO member = (MemberVO)session.getAttribute("member");
+	
+		reply.setUserId(member.getUserId());
+		reply.setWriter(member.getUserName());
+ 
 		
+	
+		RepService.registReply(reply);
 	}
 	
 	//댓글 수정
-	@RequestMapping(value="/updateReply", method=RequestMethod.POST)
-	public String updateReply(ReplyVO vo, SearchCriteria scri, RedirectAttributes rttr)throws Exception{
+	@ResponseBody
+	@RequestMapping(value="/read/updateReply", method=RequestMethod.POST)
+	public int updateReply(ReplyVO reply, HttpSession session)throws Exception{
 		logger.info("update reply");
 		
-		RepService.updateReply(vo);
+		int result = 0;
 		
-		rttr.addAttribute("bno", vo.getBno());
-		rttr.addAttribute("page", scri.getPage());
-		rttr.addAttribute("perPageNum", scri.getPerPageNum());
-	    rttr.addAttribute("searchType", scri.getSearchType());
-		rttr.addAttribute("keyword", scri.getKeyword());
-				
-		return "redirect:/board/read";
+		MemberVO member = (MemberVO)session.getAttribute("member");
+		String userId = RepService.idCheck(reply.getRno());
+		
+		if(member.getUserId().equals(userId)) {
+			
+			reply.setUserId(member.getUserId());
+			RepService.updateReply(reply);
+			result = 1;
+		}
+
+		return result;
 	}
 	
 	//댓글 삭제
-	@RequestMapping(value="/deleteReply", method=RequestMethod.POST)
-	public String deleteReply(ReplyVO vo, SearchCriteria scri, RedirectAttributes rttr)throws Exception{
+	@ResponseBody
+	@RequestMapping(value="/read/deleteReply", method=RequestMethod.POST)
+	public int deleteReply(ReplyVO reply, HttpSession session)throws Exception{
 		logger.info("delete reply");
 		
-		RepService.deleteReply(vo);
+		int result = 0;
 		
-		rttr.addAttribute("bno", vo.getBno());
-		rttr.addAttribute("page", scri.getPage());
-		rttr.addAttribute("perPageNum", scri.getPerPageNum());
-	    rttr.addAttribute("searchType", scri.getSearchType());
-		rttr.addAttribute("keyword", scri.getKeyword());
+		MemberVO member = (MemberVO)session.getAttribute("member");
+		String userId = RepService.idCheck(reply.getRno());
+		
+		if(member.getUserId().equals(userId)) {
+			reply.setUserId(member.getUserId());
+			RepService.deleteReply(reply);
+			
+			result = 1;
+		}
+		
 				
-		return "redirect:/board/read";
+		return result;
 	}
 	
-	//댓글 수정 GET
-	@RequestMapping(value="/updateReply", method=RequestMethod.GET)
-	public void getupdateReply(@RequestParam("rno") int rno, @ModelAttribute("scri") SearchCriteria scri, Model model)throws Exception{
-		logger.info("update Reply");
-		
-		ReplyVO vo = null;
-		
-		vo =RepService.readReplySelect(rno);
-		
-		model.addAttribute("readReply", vo);
-		model.addAttribute("scri", scri);
-	}
 	
 	//댓글 삭제 GET
 		@RequestMapping(value="/deleteReply", method=RequestMethod.GET)

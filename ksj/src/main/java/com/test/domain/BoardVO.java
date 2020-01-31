@@ -5,6 +5,13 @@ import java.sql.Date;
 public class BoardVO {
 	
 	private int bno;
+	private String title;
+	private String content;
+	private String writer;
+	private Date regdate;
+	private int viewCnt;
+	
+	
 	public int getBno() {
 		return bno;
 	}
@@ -41,11 +48,7 @@ public class BoardVO {
 	public void setViewCnt(int viewCnt) {
 		this.viewCnt = viewCnt;
 	}
-	private String title;
-	private String content;
-	private String writer;
-	private Date regdate;
-	private int viewCnt;
+	
 	
 	
 

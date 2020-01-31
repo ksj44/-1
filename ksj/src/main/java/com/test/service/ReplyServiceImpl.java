@@ -17,14 +17,14 @@ public class ReplyServiceImpl implements ReplyService{
 
 	//댓글조회
 	@Override
-	public List<ReplyVO> readReply(int bno) throws Exception {
-		return dao.readReply(bno);
+	public List<ReplyVO> replyList(int bno) throws Exception {
+		return dao.replyList(bno);
 	}
 
 	//댓글작성
 	@Override
-	public void writeReply(ReplyVO vo) throws Exception {
-		dao.writeReply(vo);
+	public void registReply(ReplyVO vo) throws Exception {
+		dao.registReply(vo);
 		
 	}
 	
@@ -46,6 +46,12 @@ public class ReplyServiceImpl implements ReplyService{
 	public void deleteReply(ReplyVO vo) throws Exception {
 		dao.deleteReply(vo);
 		
+	}
+
+	//아이디체크
+	@Override
+	public String idCheck(int rno) throws Exception {
+		return dao.idCheck(rno);
 	}
 
 	

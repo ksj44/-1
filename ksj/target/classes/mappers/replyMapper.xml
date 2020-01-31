@@ -5,9 +5,9 @@
 <mapper namespace="com.test.mappers.replyMapper">
 
 	<!-- 댓글 조회 -->
-	<select id="readReply" resultType="com.test.domain.ReplyVO">
-		select rno, content, writer, regDate
-		from myreply where bno = #{bno}
+	<select id="replyList" resultType="com.test.domain.ReplyVO">
+		select r.rno, r.bno, r.userId, r.content, r.writer, r.regDate
+		from myreply2  r inner join mymember m on r.userId = m.userId where bno = #{bno}
 	</select>
 	
 	<!-- 특정 댓글 조회 -->
@@ -17,20 +17,25 @@
 	</select>
 	
 	<!-- 댓글 작성 -->
-	<select id="writeReply">
-	 insert into myreply(bno,content,writer)
-	 values(#{bno},#{content},#{writer})
+	<select id="registReply">
+	 insert into myreply2(bno,userId,content,writer)
+	 values(#{bno},#{userId},#{content},#{writer})
 	</select>
 	
 	<!-- 댓글 수정 -->
 	<update id="updateReply">
-	UPDATE myreply SET content=#{content} WHERE rno=#{rno}
+	UPDATE myreply2 SET content=#{content} WHERE rno=#{rno} and userId = #{userId}
 	</update>
 	
 	<!-- 댓글 삭제 -->
 	<delete id="deleteReply">
-	delete from myreply where rno =#{rno}
+	delete from myreply2 where rno =#{rno} and userId =#{userId}
 	</delete>
+	
+	<!-- 아이디 체크 -->
+	<select id="replyUserIdCheck" resultType="String">
+	select userId from myreply2 where rno = #{rno}
+	</select>
 	
 	
 	

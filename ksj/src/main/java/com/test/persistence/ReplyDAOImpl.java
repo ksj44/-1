@@ -20,15 +20,15 @@ public class ReplyDAOImpl implements ReplyDAO{
 
 	//댓글 조회
 	@Override
-	public List<ReplyVO> readReply(int bno) throws Exception {
+	public List<ReplyVO> replyList(int bno) throws Exception {
 		
-		return sql.selectList(Namespace + ".readReply",bno);
+		return sql.selectList(Namespace + ".replyList",bno);
 	}
 
 	//댓글 작성
 	@Override
-	public void writeReply(ReplyVO vo) throws Exception {
-		sql.insert(Namespace +".writeReply", vo);
+	public void registReply(ReplyVO vo) throws Exception {
+		sql.insert(Namespace +".registReply", vo);
 		
 	}
 
@@ -49,6 +49,12 @@ public class ReplyDAOImpl implements ReplyDAO{
 	@Override
 	public void deleteReply(ReplyVO vo) throws Exception {
 		sql.delete(Namespace + ".deleteReply", vo);
+	}
+
+	//아이디 체크
+	@Override
+	public String idCheck(int rno) throws Exception {
+		return sql.selectOne(Namespace + ".replyUserIdCheck", rno);
 	}
 
 }

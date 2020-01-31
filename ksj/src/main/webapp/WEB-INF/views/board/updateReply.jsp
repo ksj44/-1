@@ -18,9 +18,7 @@
 		<header>
 			<%@include file="include/header.jsp"%>
 		</header>
-		<nav>
-			<%@include file="include/nav.jsp"%>
-		</nav>
+
 		<section id="container">
 			<form role="form" method="post" autocomplete="off">
 

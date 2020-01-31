@@ -5,6 +5,19 @@ import java.sql.Date;
 public class ReplyVO {
 	
 	private int bno;
+	private String userId;
+	private int rno;
+	private String content;
+	private String writer;
+	private Date regDate;
+	
+	
+	public String getUserId() {
+		return userId;
+	}
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
 	public int getBno() {
 		return bno;
 	}
@@ -35,10 +48,7 @@ public class ReplyVO {
 	public void setRegDate(Date regDate) {
 		this.regDate = regDate;
 	}
-	private int rno;
-	private String content;
-	private String writer;
-	private Date regDate;
+	
 	
 
 }

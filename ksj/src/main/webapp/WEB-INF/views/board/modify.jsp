@@ -9,48 +9,82 @@
 <title>게시판</title>
 
 <!-- 제이쿼리 -->
-
 <script src='http://code.jquery.com/jquery-3.3.1.min.js'></script>
+
+<!-- 합쳐지고 최소화된 최신 CSS -->
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+
+<!-- 부가적인 테마 -->
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
+
+<!-- 합쳐지고 최소화된 최신 자바스크립트 -->
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+
 </head>
 <body>
 
-	<div id="root">
 		<header>
-			<h1>게시판</h1>
+			<%@include file="include/header.jsp"%>
 		</header>
-
-		<hr />
-
-		<nav>처음화면 - 글쓰기 - 로그인</nav>
-
-		<hr />
+		<nav>
+			<%@include file="include/nav.jsp"%>
+		</nav>
 
 		<section id="container">
 
 			<form role="form" method="post" autocomplete="off">
 
-				<p>
-					<label for="bno">글 번호</label><input type="text" id="bno" name="bno"
-						value="${modify.bno}"/>
-				</p>
-				<p>
-					<label for="title">글 제목</label><input type="text" id="title"
-						name="title" value="${modify.title}" />
-				</p>
-				<p>
-					<label for="content">글 내용</label>
-					<textarea id="content" name="content">${modify.content}</textarea>
-				</p>
-				<p>
-					<label for="writer">작성자</label><input type="text" id="writer"
-						name="writer" value="${modify.writer}"/><br>
-					<label>작성 날짜</label> <span><fmt:formatDate
-							value="${modify.regdate}" pattern="yyyy-MM-dd" /></span>
-				</p>
-				<p>
-				<button type="submit">수정</button>
-				<button id="cancel_btn">취소</button>
-				
+				<div class="form-group row">
+					<label for="bno" class="col-sm-2 col-form-label">글 번호</label>
+					<div class="col-sm-10">
+						<input type="text" id="bno" name="bno" class="form-control"
+							value="${modify.bno}" readonly="readonly" />
+					</div>
+				</div>
+
+			
+
+			<div class="form-group row">
+				<label for="title" class="col-sm-2 col-form-label">글 제목</label>
+				<div class="col-sm-10">
+					<input type="text" id="title" class="form-control" name="title"
+						value="${modify.title}"  />
+				</div>
+			</div>
+
+
+			<div class="form-group row">
+				<label for="content" class="col-sm-2 col-form-label">글 내용</label>
+				<div class="col-sm-10">
+					<textarea id="content" class="form-control" name="content" rows="4"
+						>${modify.content}</textarea>
+				</div>
+			</div>
+
+
+			<div class="form-group row">
+				<label for="writer" class="col-sm-2 col-form-label">작성자</label>
+				<div class="col-sm-10">
+					<input type="text" id="writer" class="form-control" name="writer"
+						value="${modify.writer}" readonly="readonly" /><br>
+				</div>
+			</div>
+
+
+			<div class="form-group row">
+				<label class="col-sm-2 col-form-label">작성 날짜</label>
+				<div class="col-sm-10">
+					<span><fmt:formatDate value="${modify.regdate}"
+							pattern="yyyy-MM-dd" /></span>
+				</div>
+			</div>
+				<div class=text-center>
+				<button type="submit" class="btn btn-outline-dark">수정</button>
+				<button id="cancel_btn" class="btn btn-outline-dark">취소</button>
+				</div>
 				
 				<script>
 				
@@ -73,13 +107,10 @@
 
 		</section>
 
-		<hr />
-
 		<footer>
-			<p>만든이 : ksj</p>
+			<%@include file="include/footer.jsp"%>
 		</footer>
 
-	</div>
 
 </body>
 </html>
