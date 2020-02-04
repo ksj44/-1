@@ -7,7 +7,11 @@ public class MemberVO {
 	private String userId;
 	private String userPass;
 	private String userName;
+	private String userAddr1;
+	private String userAddr2;
+	private String userAddr3;
 	private Date regDate;
+
 	
 	
 	
@@ -35,6 +39,24 @@ public class MemberVO {
 	}
 	public void setRegDate(Date regDate) {
 		this.regDate = regDate;
+	}
+	public String getUserAddr1() {
+		return userAddr1;
+	}
+	public void setUserAddr1(String userAddr1) {
+		this.userAddr1 = userAddr1;
+	}
+	public String getUserAddr2() {
+		return userAddr2;
+	}
+	public void setUserAddr2(String userAddr2) {
+		this.userAddr2 = userAddr2;
+	}
+	public String getUserAddr3() {
+		return userAddr3;
+	}
+	public void setUserAddr3(String userAddr3) {
+		this.userAddr3 = userAddr3;
 	}
 	
 
